@@ -134,10 +134,55 @@ class ConsoleGame extends Game {
 	}
 }
 
-var game = new ConsoleGame(10, 10, [
+class HTMLGame extends Game {
+	private _els: HTMLElement[][] = [];
+	private $root: HTMLElement;
+	constructor(idEl: string = "root", width: number, height: number, grid: Grid) {
+		super(width, height, grid);
+
+		const root = document.querySelector<HTMLElement>("#" + idEl);
+		if (!root) throw new ReferenceError();
+		this.$root = root;
+
+		const rows: HTMLElement[] = [];
+		for (let row = 0; row < height; row++) {
+			this._els.push([]);
+			const elRow = document.createElement("div");
+			elRow.classList.add("row")
+			rows.push(elRow);
+			for (let col = 0; col < width; col++) {
+				const cell = document.createElement("span");
+				cell.classList.add("cell");
+				elRow.appendChild(cell);
+				this._els[row].push(cell);
+			}
+		}
+
+		rows.forEach(row => this.$root.appendChild(row))
+	}
+
+	render() {
+		this.grid.forEach((row, y) => row.forEach((cell, x) => {
+			const $el = this._els[y][x];
+			const classList = $el.classList;
+			if (cell instanceof LiveCell) {
+				classList.add("live");
+				$el.innerText = "L";
+			} else {
+				classList.remove("live");
+				$el.innerText = "D";
+			}
+		}))
+
+	}
+
+}
+
+var game = new HTMLGame("root", 10, 10, [
 	[0, 0, 0, 0, 0],
 	[0, 0, 1, 0, 0],
 	[0, 0, 0, 1, 0],
 	[0, 1, 1, 1, 0],
 	[0, 0, 0, 0, 0],
 ]);
+game.start();

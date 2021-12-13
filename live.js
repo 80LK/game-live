@@ -157,10 +157,54 @@ var ConsoleGame = /** @class */ (function (_super) {
     };
     return ConsoleGame;
 }(Game));
-var game = new ConsoleGame(10, 10, [
+var HTMLGame = /** @class */ (function (_super) {
+    __extends(HTMLGame, _super);
+    function HTMLGame(idEl, width, height, grid) {
+        if (idEl === void 0) { idEl = "root"; }
+        var _this = _super.call(this, width, height, grid) || this;
+        _this._els = [];
+        var root = document.querySelector("#" + idEl);
+        if (!root)
+            throw new ReferenceError();
+        _this.$root = root;
+        var rows = [];
+        for (var row = 0; row < height; row++) {
+            _this._els.push([]);
+            var elRow = document.createElement("div");
+            elRow.classList.add("row");
+            rows.push(elRow);
+            for (var col = 0; col < width; col++) {
+                var cell = document.createElement("span");
+                cell.classList.add("cell");
+                elRow.appendChild(cell);
+                _this._els[row].push(cell);
+            }
+        }
+        rows.forEach(function (row) { return _this.$root.appendChild(row); });
+        return _this;
+    }
+    HTMLGame.prototype.render = function () {
+        var _this = this;
+        this.grid.forEach(function (row, y) { return row.forEach(function (cell, x) {
+            var $el = _this._els[y][x];
+            var classList = $el.classList;
+            if (cell instanceof LiveCell) {
+                classList.add("live");
+                $el.innerText = "L";
+            }
+            else {
+                classList.remove("live");
+                $el.innerText = "D";
+            }
+        }); });
+    };
+    return HTMLGame;
+}(Game));
+var game = new HTMLGame("root", 10, 10, [
     [0, 0, 0, 0, 0],
     [0, 0, 1, 0, 0],
     [0, 0, 0, 1, 0],
     [0, 1, 1, 1, 0],
     [0, 0, 0, 0, 0],
 ]);
+game.start();

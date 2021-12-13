@@ -1,0 +1,53 @@
+:root {
+	--size: 40px;
+
+	--background: white;
+	--border: black;
+
+	--live: #222;
+	--live-text: white;
+	--die: white;
+	--die-text: black;
+}
+
+.dark {
+	--background: #222;
+	--color: white;
+	--border: white;
+
+	--live: rgb(182, 182, 182);
+	--live-text: black;
+	--die: #444;
+	--die-text: white;
+}
+
+body {
+	background-color: var(--background, white);
+}
+
+#root {
+	border: 1px solid var(--border, black);
+	display: inline-block;
+}
+
+.row {
+	display: flex;
+}
+
+.cell {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: var(--die, white);
+	color: var(--die-text, black);
+	border: 1px solid var(--border, black);
+
+	width: var(--size, 20px);
+	height: var(--size, 20px);
+}
+
+.cell.live {
+	background-color: var(--live, #222);
+	color: var(--live-text, white);
+}
